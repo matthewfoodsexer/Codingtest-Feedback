@@ -1,0 +1,45 @@
+/* 백준 Bootstrap 스타일에 맞춘 버튼 */
+.boj-feedback-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: NanumGothicCompact, Varela, Arial, NanumGothic, serif;
+
+  /* 백준 메인 색상 (#19a8cb) 기반 */
+  color: #fff;
+  background-color: #19a8cb;
+  border-color: #159ab8;
+}
+
+.boj-feedback-btn:hover,
+.boj-feedback-btn:focus {
+  color: #fff;
+  background-color: #158fa8;
+  border-color: #12839a;
+  text-decoration: none;
+}
+
+.boj-feedback-btn:active,
+.boj-feedback-btn.active {
+  color: #fff;
+  background-color: #12839a;
+  border-color: #0f7389;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+/* 제출 페이지용 - 기존 submit 버튼 옆에 배치 */
+.boj-feedback-btn-submit {
+  margin-left: 8px;
+}

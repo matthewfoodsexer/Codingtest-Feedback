@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>백준 코드 피드백</title>
+  <link rel="stylesheet" href="sidepanel.css">
+  <!-- highlight.js (로컬 번들) -->
+  <link rel="stylesheet" href="../lib/github-dark.min.css">
+  <script src="../lib/highlight.min.js"></script>
+  <script src="../lib/hljs-cpp.min.js"></script>
+  <script src="../lib/hljs-c.min.js"></script>
+  <script src="../lib/hljs-python.min.js"></script>
+  <script src="../lib/hljs-java.min.js"></script>
+  <!-- marked.js (로컬 번들) -->
+  <script src="../lib/marked.min.js"></script>
+</head>
+<body>
+  <div class="header">
+    <h1>백준 코드 피드백</h1>
+    <div class="header-actions">
+      <button id="historyBtn" class="icon-btn" title="분석 히스토리">📋</button>
+    </div>
+  </div>
+
+  <!-- 메인: 코드 입력 + 분석 -->
+  <div id="mainView">
+    <div id="problemBadge" class="problem-badge hidden">
+      <span id="problemLabel">문제 로딩 중...</span>
+    </div>
+
+    <div class="code-input-section">
+      <div class="code-input-header">
+        <label for="codeInput">내 코드 붙여넣기</label>
+        <button id="autoFetchBtn" class="btn-auto-fetch">최근 제출 불러오기</button>
+      </div>
+      <textarea id="codeInput" placeholder="여기에 제출한 코드를 붙여넣으세요...&#10;&#10;또는 '최근 제출 불러오기' 버튼을 눌러 자동으로 가져오세요."></textarea>
+    </div>
+
+    <button id="analyzeBtn" class="btn-analyze">분석 시작</button>
+
+    <!-- 로딩 -->
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>AI가 코드를 분석하고 있습니다...</p>
+    </div>
+
+    <!-- 에러 -->
+    <div id="errorBox" class="error-box hidden">
+      <p id="errorMsg"></p>
+      <button id="retryBtn" class="btn-retry">다시 시도</button>
+    </div>
+
+    <!-- 결과 -->
+    <div id="resultBox" class="result-box hidden"></div>
+  </div>
+
+  <!-- 히스토리 뷰 -->
+  <div id="historyView" class="hidden">
+    <div class="history-header">
+      <button id="backBtn" class="icon-btn">← 돌아가기</button>
+      <button id="clearAllBtn" class="icon-btn btn-danger">전체 삭제</button>
+    </div>
+    <div id="historyList" class="history-list"></div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
