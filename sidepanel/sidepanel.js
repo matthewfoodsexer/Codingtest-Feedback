@@ -18,8 +18,7 @@ const elements = {
   historyBtn: document.getElementById('historyBtn'),
   backBtn: document.getElementById('backBtn'),
   historyList: document.getElementById('historyList'),
-  clearAllBtn: document.getElementById('clearAllBtn'),
-  autoFetchBtn: document.getElementById('autoFetchBtn')
+  clearAllBtn: document.getElementById('clearAllBtn')
 };
 
 // 현재 문제 정보
@@ -41,7 +40,7 @@ async function init() {
     }
   });
 
-  // 현재 탭에서 문제 정보 가져오기 시도
+  // 현재 탭에서 문제 정보 가져오기 + 최근 제출 코드 자동 불러오기
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab && tab.url?.includes('acmicpc.net')) {
@@ -50,10 +49,15 @@ async function init() {
         if (info && info.number) {
           currentProblemInfo = info;
           showProblemBadge(info);
+
+          // 코드가 아직 없으면 최근 제출 코드 자동 불러오기
+          if (!elements.codeInput.value) {
+            autoFetchCode(tab.id, info.number);
+          }
         }
       });
 
-      // 코드도 가져오기 시도
+      // 제출 페이지의 에디터에서 코드 가져오기 시도
       chrome.tabs.sendMessage(tab.id, { action: 'getCode' }, (response) => {
         if (chrome.runtime.lastError) return;
         if (response?.code && !elements.codeInput.value) {
@@ -264,52 +268,25 @@ async function clearAllHistory() {
 /**
  * 최근 제출 코드 자동 불러오기
  */
-async function autoFetchCode() {
-  const problemNumber = currentProblemInfo?.number;
-  if (!problemNumber) {
-    alert('백준 문제 페이지를 먼저 열어주세요.');
-    return;
-  }
-
-  elements.autoFetchBtn.disabled = true;
-  elements.autoFetchBtn.textContent = '불러오는 중...';
-
+async function autoFetchCode(tabId, problemNumber) {
   try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tab?.url?.includes('acmicpc.net')) {
-      alert('백준 페이지가 열려있어야 합니다.');
-      return;
-    }
+    elements.codeInput.placeholder = '최근 제출 코드를 불러오는 중...';
 
     const response = await new Promise((resolve) => {
-      chrome.tabs.sendMessage(tab.id, {
+      chrome.tabs.sendMessage(tabId, {
         action: 'fetchLatestCode',
         problemNumber
       }, resolve);
     });
 
-    if (response?.error) {
-      alert(response.error);
-      return;
-    }
-
-    if (response?.code) {
+    if (response?.code && !elements.codeInput.value) {
       elements.codeInput.value = response.code;
-      elements.autoFetchBtn.textContent = '불러오기 완료!';
-      setTimeout(() => {
-        elements.autoFetchBtn.textContent = '최근 제출 불러오기';
-      }, 2000);
-      return;
+      elements.codeInput.placeholder = '여기에 코드를 붙여넣으세요.';
+    } else {
+      elements.codeInput.placeholder = '코드를 불러올 수 없습니다. 직접 붙여넣으세요.';
     }
-
-    alert('코드를 가져올 수 없습니다.');
   } catch {
-    alert('코드를 불러오는 중 오류가 발생했습니다.');
-  } finally {
-    elements.autoFetchBtn.disabled = false;
-    if (elements.autoFetchBtn.textContent === '불러오는 중...') {
-      elements.autoFetchBtn.textContent = '최근 제출 불러오기';
-    }
+    elements.codeInput.placeholder = '코드를 불러올 수 없습니다. 직접 붙여넣으세요.';
   }
 }
 
@@ -317,7 +294,6 @@ async function autoFetchCode() {
 elements.analyzeBtn.addEventListener('click', startAnalysis);
 elements.retryBtn.addEventListener('click', startAnalysis);
 elements.historyBtn.addEventListener('click', showHistory);
-elements.autoFetchBtn.addEventListener('click', autoFetchCode);
 elements.backBtn.addEventListener('click', () => {
   elements.historyView.classList.add('hidden');
   elements.mainView.classList.remove('hidden');
