@@ -11,7 +11,8 @@
   ],
   "host_permissions": [
     "https://www.acmicpc.net/*",
-    "https://generativelanguage.googleapis.com/*"
+    "https://generativelanguage.googleapis.com/*",
+    "https://solved.ac/*"
   ],
   "background": {
     "service_worker": "background/service-worker.js"

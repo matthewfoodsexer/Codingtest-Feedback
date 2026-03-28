@@ -39,6 +39,16 @@
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
+/* 문제 페이지 알고리즘 태그 */
+.boj-feedback-tags {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #888;
+  vertical-align: middle;
+}
+
 /* 제출 페이지용 - 기존 submit 버튼 옆에 배치 */
 .boj-feedback-btn-submit {
   margin-left: 8px;
