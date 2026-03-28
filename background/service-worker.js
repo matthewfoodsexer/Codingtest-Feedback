@@ -71,12 +71,18 @@ async function handleAnalysisRequest(data, sendResponse) {
       return;
     }
 
-    const model = settings.model || 'gemini-2.5-flash-lite';
+    if (!settings.model) {
+      sendResponse({ error: '모델이 설정되지 않았습니다. 확장 프로그램 아이콘을 클릭하여 설정해주세요.' });
+      return;
+    }
+
+    const model = settings.model;
     const language = settings.language || 'C++';
     const { problemInfo, code } = data;
 
-    // 캐시 확인
-    const cacheKey = `${problemInfo.number}_${hashCode(code || '')}`;
+    // 캐시 확인 (프롬프트 버전 포함 — 프롬프트 변경 시 캐시 무효화)
+    const PROMPT_VERSION = 'v8';
+    const cacheKey = `${PROMPT_VERSION}_${problemInfo.number}_${hashCode(code || '')}`;
     if (analysisCache.has(cacheKey)) {
       sendResponse({ result: analysisCache.get(cacheKey), cached: true });
       return;
@@ -131,3 +137,4 @@ function hashCode(str) {
   }
   return hash.toString(36);
 }
+
