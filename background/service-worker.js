@@ -40,9 +40,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       pendingAnalysisData = null;
       break;
 
-    case 'fetchTags':
-      fetchProblemTags(message.problemNumber).then(sendResponse);
-      return true; // async
   }
 });
 
@@ -107,24 +104,6 @@ async function handleAnalysisRequest(data, sendResponse) {
     sendResponse({ result });
   } catch (error) {
     sendResponse({ error: error.message });
-  }
-}
-
-/**
- * solved.ac API에서 문제 태그 가져오기
- */
-async function fetchProblemTags(problemNumber) {
-  try {
-    const resp = await fetch(`https://solved.ac/api/v3/problem/show?problemId=${problemNumber}`);
-    if (!resp.ok) return [];
-
-    const data = await resp.json();
-    return data.tags?.map(t => {
-      const ko = t.displayNames?.find(d => d.language === 'ko');
-      return ko ? ko.name : t.key;
-    }) || [];
-  } catch {
-    return [];
   }
 }
 

@@ -7,7 +7,6 @@
 
   if (pageType === 'problem') {
     injectProblemPageButton();
-    injectProblemTags();
   } else if (pageType === 'submit') {
     injectSubmitPageButton();
   }
@@ -56,26 +55,6 @@
 
     // submit 버튼 바로 옆에 삽입
     submitBtn.parentNode.insertBefore(btn, submitBtn.nextSibling);
-  }
-
-  /**
-   * 문제 제목 옆에 알고리즘 태그 표시
-   */
-  async function injectProblemTags() {
-    const problemNumber = BaekjoonDetector.getProblemNumber();
-    if (!problemNumber) return;
-
-    const titleEl = document.getElementById('problem_title');
-    if (!titleEl) return;
-
-    chrome.runtime.sendMessage({ action: 'fetchTags', problemNumber }, (tags) => {
-      if (!tags || tags.length === 0) return;
-
-      const tagSpan = document.createElement('span');
-      tagSpan.className = 'boj-feedback-tags';
-      tagSpan.textContent = tags.join(', ');
-      titleEl.parentElement.appendChild(tagSpan);
-    });
   }
 
   /**
